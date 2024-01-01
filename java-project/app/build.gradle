@@ -34,7 +34,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'App'
+    mainClass = 'eomtime.App'
 }
 
 tasks.named('test') {
