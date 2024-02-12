@@ -91,7 +91,7 @@ public class App {
             break;
           }
           System.out.printf("학번: %s\n", studentNo[no]);
-          System.out.printf("이름: %sf\n", name[no]);
+          System.out.printf("이름: %s\n", name[no]);
           System.out.printf("나이: %d\n", age[no]);
           System.out.printf("내국인: %b\n", local[no]);
           System.out.printf("성별: %c\n", gender[no]);

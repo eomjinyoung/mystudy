@@ -48,7 +48,7 @@ public class App {
           break;
         case "2":
           System.out.printf("학번: %s\n", studentNo);
-          System.out.printf("이름: %sf\n", name);
+          System.out.printf("이름: %s\n", name);
           System.out.printf("나이: %d\n", age);
           System.out.printf("내국인: %b\n", local);
           System.out.printf("성별: %c\n", gender);
