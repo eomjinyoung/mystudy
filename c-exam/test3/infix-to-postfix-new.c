@@ -6,12 +6,14 @@
 // 06. push(), pop(), printToken() 구현
 // 07. 연산자 추가: &&, ||, <<, >>, <=, !=, ==, <, >, >=
 // 08. 연산자 우선순위 적용
+// 09. 연산자를 문자열로 배열에 저장해서 다루기
 
 #include <stdio.h>
 #include <string.h>
 
 #define MAX_EXPR_SIZE 100
 #define MAX_STACK_SIZE 100
+#define MAX_TOKEN_TITLE_LENGTH 10
 
 typedef enum {
   lparen, rparen, plus, minus, times, divide, mod, eos, operand
@@ -35,6 +37,11 @@ static int isp[] = {0, 19, 12, 12, 13, 13, 13, 0, 0
 static int icp[] = {20, 19, 12, 12, 13, 13, 13, 0, 0
   , 5, 4, 11, 11
   , 10, 9, 9, 10, 10, 10
+};
+const char token_titles[][MAX_TOKEN_TITLE_LENGTH] = {
+  "(", ")", "+", "-", "*", "/", "%", "", ""
+  , "&&", "||", "<<", ">>"
+  , "<=", "!=", "==", "<", ">", ">="
 };
 
 int top = -1;
@@ -88,47 +95,19 @@ precedence getToken(char *symbol, int *n) {
     return eos;
   } 
 
-  if (strcmp(symbol, "(") == 0) {
-    return lparen;
-  } else if (strcmp(symbol, ")") == 0) {
-    return rparen;
-  } else if (strcmp(symbol, "+") == 0) {
-    return plus;
-  } else if (strcmp(symbol, "-") == 0) {
-    return minus;
-  } else if (strcmp(symbol, "/") == 0) {
-    return divide;
-  } else if (strcmp(symbol, "*") == 0) {
-    return times;
-  } else if (strcmp(symbol, "%") == 0) {
-    return mod;
-  } else if (strcmp(symbol, "&&") == 0) {
-    return logical_and;
-  } else if (strcmp(symbol, "||") == 0) {
-    return logical_or;
-  } else if (strcmp(symbol, "<<") == 0) {
-    return left_shift;
-  } else if (strcmp(symbol, ">>") == 0) {
-    return right_shift;
-  } else if (strcmp(symbol, "<=") == 0) {
-    return less_equal;
-  } else if (strcmp(symbol, "!=") == 0) {
-    return not_equal;
-  } else if (strcmp(symbol, "==") == 0) {
-    return equal;
-  } else if (strcmp(symbol, "<") == 0) {
-    return less;
-  } else if (strcmp(symbol, ">") == 0) {
-    return greater;
-  } else if (strcmp(symbol, ">=") == 0) {
-    return greater_equal;
-  } else {
-    // 표현식의 끝에 도달했다면 읽기 위치를 뒤로 한 칸 이동시킨다.
-    if (ch == eos) {
-      (*n)--;
+  int tokenCount = sizeof(token_titles) / MAX_TOKEN_TITLE_LENGTH;
+
+  for (int i = 0; i < tokenCount; i++) {
+    if (strcmp(symbol, token_titles[i]) == 0) {
+      return i;
     }
-    return operand;
   }
+
+  // 표현식의 끝에 도달했다면 읽기 위치를 뒤로 한 칸 이동시킨다.
+  if (ch == eos) {
+    (*n)--;
+  }
+  return operand;
 }
 
 void push(precedence token)
@@ -143,53 +122,6 @@ precedence pop()
 
 void printToken(precedence token) 
 {
-  switch (token) {
-    case plus:
-      printf("+");
-      break;
-    case minus:
-      printf("-");
-      break;
-    case times:
-      printf("*");
-      break;
-    case divide:
-      printf("/");
-      break;
-    case mod:
-      printf("%%");
-      break;
-    case logical_and:
-      printf("&&");
-      break;
-    case logical_or:
-      printf("||");
-      break;
-    case left_shift:
-      printf("<<");
-      break;
-    case right_shift:
-      printf(">>");
-      break;
-    case less_equal:
-      printf("<=");
-      break;
-    case not_equal:
-      printf("!=");
-      break;
-    case equal:
-      printf("==");
-      break;
-    case less:
-      printf("<");
-      break;
-    case greater:
-      printf(">");
-      break;
-    case greater_equal:
-      printf(">=");
-      break;
-    default:
-      break;
-  }
+  printf("%s", token_titles[token]);
 }
+
