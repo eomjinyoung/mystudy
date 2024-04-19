@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define MAX_EXPR_SIZE 100
 #define MAX_STACK_SIZE 100
@@ -33,22 +34,38 @@ void postfix() {
   char symbol;
   int n = 0;
   precedence token;
-  stack[0] = eos;
+  stack[0] = eos; // 스택에서 값을 꺼낼 때 스택의 끝을 표시하기 위함
+  precedence previousToken = eos; // 이전에 읽은 토큰
+  int isUnaryOperator = false;
 
   for (token = getToken(&symbol, &n); token != eos; token = getToken(&symbol, &n)) {
     if (token == operand) {
       printf("%c", symbol);
+      if (isUnaryOperator) {
+        printToken(pop()); // 피연산자를 꺼낸다.
+        pop(); // lparan 을 제거한다.
+        isUnaryOperator = false;
+      }
     } else if (token == rparen) {
       while (stack[top] != lparen) {
         printToken(pop());
       }
       pop(); // lparen 버림
     } else {
-      while (isp[stack[top]] >= icp[token]) {
-        printToken(pop());
+      if ((token == plus || token == minus) && previousToken != operand) {
+        // 이전에 읽은 토큰이 피연산자가 아닐 경우, 단항연산자로 다룬다.
+        push(lparen);
+        printf("0");
+        isUnaryOperator = true;
+      } else {
+        // 이항 연산자일 경우
+        while (isp[stack[top]] >= icp[token]) {
+          printToken(pop());
+        }
       }
       push(token);
     }
+    previousToken = token;
   }
   // eos
   while ((token = pop()) != eos) {

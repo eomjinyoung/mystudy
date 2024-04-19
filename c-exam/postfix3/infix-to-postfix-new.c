@@ -44,7 +44,7 @@ const char token_titles[][MAX_TOKEN_TITLE_LENGTH] = {
   , "<=", "!=", "==", "<", ">", ">="
 };
 
-int top = -1;
+int top = 0;
 
 int main() {
   scanf("%[^\n]s", expr);
@@ -57,8 +57,7 @@ void postfix_new() {
   char symbol[5];
   int n = 0;
   precedence token;
-  
-  push(eos);
+  stack[0] = eos; // 스택에서 값을 꺼낼 때 스택의 끝을 표시하기 위함
   
   for (token = getToken(symbol, &n); token != eos; token = getToken(symbol, &n)) {
     if (token == operand) {
